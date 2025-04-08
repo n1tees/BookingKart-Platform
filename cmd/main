@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"BookingKart-Platform/config"
+	"BookingKart-Platform/internal/db"
+)
 
 func main() {
-	fmt.Println("this is my 1st version of this project")
+	config.LoadEnv()
+	db.InitDB()
+
+	// Здесь позже запустим сервер
 }
