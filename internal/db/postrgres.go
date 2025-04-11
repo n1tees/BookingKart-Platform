@@ -6,7 +6,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"BookingKart-Platform/config"
+	"github.com/n1tees/BookingKart-Platform/config"
 )
 
 var DB *gorm.DB

@@ -1,4 +1,4 @@
-package modules
+package models
 
 import "time"
 
@@ -237,4 +237,12 @@ type CommonStat struct {
 	TotalCustomer int       `gorm:"not null"`
 	TotalTime     int       `gorm:"not null"`
 	TotalRevenue  float64   `gorm:"type:decimal;not null"`
+}
+
+type Payment struct {
+	ID     uint      `gorm:"primaryKey"`
+	UserID uint      `gorm:"not null"`
+	User   UserInfo  `gorm:"foreignKey:UserID;references:ID"`
+	Amount float64   `gorm:"type:decimal;not null"`
+	Date   time.Time `gorm:"not null"`
 }
