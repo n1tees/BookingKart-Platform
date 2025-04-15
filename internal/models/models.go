@@ -1,6 +1,20 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
+type Unit string
+
+const (
+	IndividualScore  Unit = "Индивидуальные баллы"
+	FinalTime        Unit = "Итоговое время"
+	Placement        Unit = "Место"
+	PerformanceScore Unit = "Лучший результат"
+	ResultValue      Unit = "Резульатат"
+)
 
 type DifLevel string
 
@@ -67,79 +81,54 @@ const (
 type UserType string
 
 const (
-	Employee UserType = "Работник"
-	Customer UserType = "Клиент"
+	Customer UserType = "customer"
+	Admin    UserType = "admin"
 )
 
-type Kartodrom struct {
-	ID       uint   `gorm:"primaryKey"`
-	Name     string `gorm:"type:varchar(100);not null"`
-	Location string `gorm:"type:varchar(100);not null"`
-	Phone    string `gorm:"type:varchar(11);not null;unique"`
-	Email    string `gorm:"type:varchar(50);not null;unique"`
-}
-
-type Kart struct {
-	ID          uint       `gorm:"primaryKey"`
-	KartodromID uint       `gorm:"not null"`
-	Kartodrom   Kartodrom  `gorm:"foreignKey:KartodromID;references:ID"`
-	KartModelID uint       `gorm:"not null"`
-	KartModel   KartModel  `gorm:"foreignKey:KartModelID;references:ID"`
-	KartStatus  KartStatus `gorm:"type:varchar(20);not null"`
-}
-
-type KartModel struct {
-	ID             uint            `gorm:"primaryKey"`
-	Name           string          `gorm:"type:varchar(50);not null"`
-	Category       KartModelStatus `gorm:"type:varchar(20);not null"`
-	MaxSpeed       int             `gorm:"not null"`
-	MaxWeight      int             `gorm:"not null"`
-	MaxHeight      int             `gorm:"not null"`
-	PricePerMinute float64         `gorm:"type:decimal;not null"`
-	Desc           string          `gorm:"type:varchar(255);not null"`
-}
-
-type UserInfo struct {
-	ID        uint      `gorm:"primaryKey"`
-	FName     string    `gorm:"type:varchar(50);not null"`
-	SName     string    `gorm:"type:varchar(50);not null"`
-	Phone     string    `gorm:"type:varchar(11);not null;unique"`
-	Email     string    `gorm:"type:varchar(50);unique"`
-	Weight    float64   `gorm:"type:decimal"`
-	Height    float64   `gorm:"type:decimal"`
-	BirthDay  time.Time `gorm:"type:date"`
-	Balance   float64   `gorm:"type:decimal"`
-	CreatedAt time.Time
-}
-
-type EmployeeInfo struct {
-	ID       uint   `gorm:"primaryKey"`
-	Position string `gorm:"type:varchar(50);not null"`
-}
-
 type AuthCredential struct {
-	ID               uint   `gorm:"primaryKey"`
-	Login            string `gorm:"type:varchar(50);not null;unique"`
-	PassWordHashbyte []byte `gorm:"not null"`
+	gorm.Model
+	Login        string `gorm:"type:varchar(50);not null;unique"`
+	PasswordHash []byte `gorm:"not null"`
 }
 
 type User struct {
-	ID             uint           `gorm:"primaryKey"`
-	UserType       UserType       `gorm:"type:varchar(20);not null"`
-	AuthID         uint           `gorm:"not null"`
-	Auth           AuthCredential `gorm:"foreignKey:AuthID;references:ID"`
-	UserInfoID     uint           `gorm:"not null"`
-	UserInfo       UserInfo       `gorm:"foreignKey:UserInfoID;references:ID"`
-	EmployeeInfoID *uint
-	EmployeeInfo   EmployeeInfo `gorm:"foreignKey:EmployeeInfoID;references:ID"`
+	gorm.Model
+	AuthID     uint           `gorm:"not null"`
+	Auth       AuthCredential `gorm:"foreignKey:AuthID;references:ID"`
+	UserInfoID uint           `gorm:"not null"`
+	UserInfo   UserInfo       `gorm:"foreignKey:UserInfoID;references:ID"`
+	UserType   UserType       `gorm:"type:varchar(25);not null"`
+}
+
+type UserInfo struct {
+	gorm.Model
+	FName    string    `gorm:"type:varchar(50);not null"`
+	SName    string    `gorm:"type:varchar(50);not null"`
+	Phone    string    `gorm:"type:varchar(11);not null;unique"`
+	Email    string    `gorm:"type:varchar(50);unique"`
+	Weight   float64   `gorm:"type:numeric(12, 2)"`
+	Height   float64   `gorm:"type:numeric(12, 2)"`
+	BirthDay time.Time `gorm:"type:date"`
+	Balance  float64   `gorm:"type:numeric(12, 2)"`
+}
+
+type Payment struct {
+	ID     uint      `gorm:"primaryKey"`
+	UserID uint      `gorm:"not null"`
+	User   UserInfo  `gorm:"foreignKey:UserID;references:ID"`
+	Amount float64   `gorm:"type:numeric(12, 2);not null"`
+	Date   time.Time `gorm:"not null"`
 }
 
 type RaceRider struct {
-	ID      uint `gorm:"primaryKey"`
-	RiderID uint `gorm:"not null"`
-	Rider   User `gorm:"foreignKey:RiderID;references:ID"`
-	RaceID  uint `gorm:"not null"`
-	Race    Race `gorm:"foreignKey:RaceID;references:ID"`
+	ID             uint       `gorm:"primaryKey"`
+	RiderID        uint       `gorm:"not null"`
+	Rider          User       `gorm:"foreignKey:RiderID;references:ID"`
+	RaceID         uint       `gorm:"not null"`
+	Race           Race       `gorm:"foreignKey:RaceID;references:ID"`
+	ResultTypeID   uint       `gorm:"not null"`
+	ResultType     ResultType `gorm:"foreignKey:ResultTypeID;references:ID"`
+	PersonalResult uint       `gorm:"not null"`
 }
 
 type Booking struct {
@@ -149,23 +138,28 @@ type Booking struct {
 	CustomerID  uint          `gorm:"not null"`
 	Customer    User          `gorm:"foreignKey:CustomerID;references:ID"`
 	Date        time.Time     `gorm:"type:date;not null"`
+	TimeStart   time.Time     `gorm:"type:time;not null"`
+	Duration    uint          `gorm:"not null"`
+	TotalPrice  float64       `gorm:"type:numeric(12, 2);not null"`
 	BookingType BookingType   `gorm:"type:varchar(50);not null"`
 	Status      BookingStatus `gorm:"type:varchar(25);not null"`
-	Duration    uint          `gorm:"not null"`
-	TimeStart   time.Time     `gorm:"not null"`
-	TimeEnd     time.Time     `gorm:"not null"`
-	TotalPrice  float64       `gorm:"type:decimal;not null"`
 }
 
 type KartBooking struct {
-	ID                uint          `gorm:"primaryKey"`
-	BookingID         uint          `gorm:"not null"`
-	Booking           Booking       `gorm:"foreignKey:BookingID;references:ID"`
-	CustomerID        uint          `gorm:"not null"`
-	Customer          User          `gorm:"foreignKey:CustomerID;references:ID"`
-	KartID            uint          `gorm:"not null"`
-	Kart              Kart          `gorm:"foreignKey:KartID;references:ID"`
-	KartBookingStatus BookingStatus `gorm:"type:varchar(25);not null"`
+	ID         uint          `gorm:"primaryKey"`
+	BookingID  uint          `gorm:"not null"`
+	Booking    Booking       `gorm:"foreignKey:BookingID;references:ID"`
+	CustomerID uint          `gorm:"not null"`
+	Customer   User          `gorm:"foreignKey:CustomerID;references:ID"`
+	KartID     uint          `gorm:"not null"`
+	Kart       Kart          `gorm:"foreignKey:KartID;references:ID"`
+	Status     BookingStatus `gorm:"type:varchar(25);not null"`
+}
+
+type ResultType struct {
+	ID   uint   `gorm:"primaryKey"`
+	Name string `gorm:"type:varchar(50);not null"`
+	Unit Unit   `gorm:"type:varchar(25);not null"`
 }
 
 type Race struct {
@@ -173,34 +167,32 @@ type Race struct {
 	TrackID    uint       `gorm:"not null"`
 	Track      Track      `gorm:"foreignKey:TrackID;references:ID"`
 	Date       time.Time  `gorm:"type:date;not null"`
-	RaceType   RaceType   `gorm:"type:varchar(50);not null"`
-	TimeStart  time.Time  `gorm:"not null"`
-	TimeEnd    time.Time  `gorm:"not null"`
+	TimeStart  time.Time  `gorm:"type:time;not null"`
 	Duration   uint       `gorm:"not null"`
 	Laps       uint       `gorm:"not null"`
-	TotalPrice float64    `gorm:"type:decimal;not null"`
-	RaceStatus RaceStatus `gorm:"type:varchar(25);not null"`
+	TotalPrice float64    `gorm:"type:numeric(12, 2);not null"`
+	RaceType   RaceType   `gorm:"type:varchar(50);not null"`
+	Status     RaceStatus `gorm:"type:varchar(25);not null"`
 }
 
 type Track struct {
-	ID             uint      `gorm:"primaryKey"`
-	KartodromID    uint      `gorm:"not null"`
-	Kartodrom      Kartodrom `gorm:"foreignKey:KartodromID;references:ID"`
-	Name           string    `gorm:"type:varchar(50);not null"`
-	Length         uint      `gorm:"not null"`
-	DifLevel       DifLevel  `gorm:"type:varchar(20);not null"`
-	PricePerMinute float64   `gorm:"type:decimal;not null"`
-	MaxKart        uint      `gorm:"not null"`
+	ID          uint      `gorm:"primaryKey"`
+	KartodromID uint      `gorm:"not null"`
+	Kartodrom   Kartodrom `gorm:"foreignKey:KartodromID;references:ID"`
+	Name        string    `gorm:"type:varchar(50);not null"`
+	Length      uint      `gorm:"not null"`
+	DifLevel    DifLevel  `gorm:"type:varchar(20);not null"`
+	PricePerMin float64   `gorm:"type:numeric(12, 2);not null"`
+	MaxKarts    uint      `gorm:"not null"`
 }
 
-type KartStat struct {
-	ID            uint      `gorm:"primaryKey"`
-	KartID        uint      `gorm:"not null"`
-	Kart          Kart      `gorm:"foreignKey:KartID;references:ID"`
-	Date          time.Time `gorm:"type:date;not null"`
-	TotalCustomer int       `gorm:"not null"`
-	TotalTime     int       `gorm:"not null"`
-	TotalRevenue  float64   `gorm:"type:decimal;not null"`
+type Kart struct {
+	ID          uint       `gorm:"primaryKey"`
+	KartodromID uint       `gorm:"not null"`
+	Kartodrom   Kartodrom  `gorm:"foreignKey:KartodromID;references:ID"`
+	KartModelID uint       `gorm:"not null"`
+	KartModel   KartModel  `gorm:"foreignKey:KartModelID;references:ID"`
+	Status      KartStatus `gorm:"type:varchar(20);not null"`
 }
 
 type TrackStat struct {
@@ -209,24 +201,30 @@ type TrackStat struct {
 	Track   Track     `gorm:"foreignKey:TrackID;references:ID"`
 	Date    time.Time `gorm:"type:date;not null"`
 
-	FreeRideCount int `gorm:"not null"`
-	FreeRideTime  int `gorm:"not null"`
+	FreeRideCount   uint    `gorm:"not null"`
+	FreeRideTime    uint    `gorm:"not null"`
+	TimeAttackCount uint    `gorm:"not null"`
+	TimeAttackTime  uint    `gorm:"not null"`
+	DuoCount        uint    `gorm:"not null"`
+	DuoTime         uint    `gorm:"not null"`
+	SprintCount     uint    `gorm:"not null"`
+	SprintTime      uint    `gorm:"not null"`
+	EnduranceCount  uint    `gorm:"not null"`
+	EnduranceTime   uint    `gorm:"not null"`
+	TotalCustomer   uint    `gorm:"not null"`
+	TotalTime       uint    `gorm:"not null"`
+	TotalRevenue    float64 `gorm:"type:numeric(12, 2);not null"`
+}
 
-	TimeAttackCount int `gorm:"not null"`
-	TimeAttackTime  int `gorm:"not null"`
-
-	DuoCount int `gorm:"not null"`
-	DuoTime  int `gorm:"not null"`
-
-	SprintCount int `gorm:"not null"`
-	SprintTime  int `gorm:"not null"`
-
-	EnduranceCount int `gorm:"not null"`
-	EnduranceTime  int `gorm:"not null"`
-
-	TotalCustomer int     `gorm:"not null"`
-	TotalTime     int     `gorm:"not null"`
-	TotalRevenue  float64 `gorm:"type:decimal;not null"`
+type KartModel struct {
+	ID          uint            `gorm:"primaryKey"`
+	Name        string          `gorm:"type:varchar(50);not null"`
+	Category    KartModelStatus `gorm:"type:varchar(50);not null"`
+	MaxSpeed    uint            `gorm:"not null"`
+	MaxWeight   uint            `gorm:"not null"`
+	MaxHeight   uint            `gorm:"not null"`
+	PricePerMin float64         `gorm:"type:numeric(12, 2);not null"`
+	Desc        string          `gorm:"type:varchar(255);not null"`
 }
 
 type CommonStat struct {
@@ -234,15 +232,34 @@ type CommonStat struct {
 	KartodromID   uint      `gorm:"not null"`
 	Kartodrom     Kartodrom `gorm:"foreignKey:KartodromID;references:ID"`
 	Date          time.Time `gorm:"type:date;not null"`
-	TotalCustomer int       `gorm:"not null"`
-	TotalTime     int       `gorm:"not null"`
-	TotalRevenue  float64   `gorm:"type:decimal;not null"`
+	TotalCustomer uint      `gorm:"not null"`
+	TotalTime     uint      `gorm:"not null"`
+	TotalRevenue  float64   `gorm:"type:numeric(12, 2);not null"`
 }
 
-type Payment struct {
-	ID     uint      `gorm:"primaryKey"`
-	UserID uint      `gorm:"not null"`
-	User   UserInfo  `gorm:"foreignKey:UserID;references:ID"`
-	Amount float64   `gorm:"type:decimal;not null"`
-	Date   time.Time `gorm:"not null"`
+type KartodromSchedule struct {
+	ID          uint      `gorm:"primaryKey"`
+	KartodromID uint      `gorm:"not null"`
+	Kartodrom   Kartodrom `gorm:"foreignKey:KartodromID;references:ID"`
+	DayOfWeek   uint      `gorm:"not null"`
+	OpenTime    time.Time `gorm:"type:time;not null"`
+	CloseTime   time.Time `gorm:"type:time;not null"`
+}
+
+type Kartodrom struct {
+	ID       uint   `gorm:"primaryKey"`
+	Name     string `gorm:"type:varchar(100);not null"`
+	Location string `gorm:"type:varchar(100);not null"`
+	Phone    string `gorm:"type:varchar(11);not null;unique"`
+	Email    string `gorm:"type:varchar(50);not null;unique"`
+}
+
+type KartStat struct {
+	ID            uint      `gorm:"primaryKey"`
+	KartID        uint      `gorm:"not null"`
+	Kart          Kart      `gorm:"foreignKey:KartID;references:ID"`
+	Date          time.Time `gorm:"type:date;not null"`
+	TotalCustomer uint      `gorm:"not null"`
+	TotalTime     uint      `gorm:"not null"`
+	TotalRevenue  float64   `gorm:"type:numeric(12, 2);not null"`
 }
