@@ -28,9 +28,10 @@ const (
 type RaceStatus string
 
 const (
+	RaceCreate   RaceStatus = "Создана"
+	RaceStart    RaceStatus = "Начата"
+	RaceFinish   RaceStatus = "Завершена"
 	RaceCanceled RaceStatus = "Отменена"
-	RaceReserved RaceStatus = "Забронирована"
-	RaceClosed   RaceStatus = "Завершена"
 )
 
 type RaceType string
@@ -46,9 +47,10 @@ const (
 type BookingStatus string
 
 const (
-	BookingCanceled BookingStatus = "Отменен"
-	BookingReserved BookingStatus = "Забронирован"
-	BookingClosed   BookingStatus = "Завершен"
+	BookingActive  BookingStatus = "Активный"
+	BookingReserve BookingStatus = "Забронирован"
+	BookingClose   BookingStatus = "Завершен"
+	BookingCancel  BookingStatus = "Отменен"
 )
 
 type BookingType string
@@ -93,14 +95,14 @@ type AuthCredential struct {
 
 type User struct {
 	gorm.Model
-	AuthID     uint           `gorm:"not null"`
-	Auth       AuthCredential `gorm:"foreignKey:AuthID;references:ID"`
-	UserInfoID uint           `gorm:"not null"`
-	UserInfo   UserInfo       `gorm:"foreignKey:UserInfoID;references:ID"`
-	UserType   UserType       `gorm:"type:varchar(25);not null"`
+	AuthID    uint           `gorm:"not null"`
+	Auth      AuthCredential `gorm:"foreignKey:AuthID;references:ID"`
+	ProfileID uint           `gorm:"not null"`
+	Profile   Profile        `gorm:"foreignKey:UserInfoID;references:ID"`
+	UserType  UserType       `gorm:"type:varchar(25);not null"`
 }
 
-type UserInfo struct {
+type Profile struct {
 	gorm.Model
 	FName    string    `gorm:"type:varchar(50);not null"`
 	SName    string    `gorm:"type:varchar(50);not null"`
@@ -115,7 +117,7 @@ type UserInfo struct {
 type Payment struct {
 	ID     uint      `gorm:"primaryKey"`
 	UserID uint      `gorm:"not null"`
-	User   UserInfo  `gorm:"foreignKey:UserID;references:ID"`
+	User   User      `gorm:"foreignKey:UserID;references:ID"`
 	Amount float64   `gorm:"type:numeric(12, 2);not null"`
 	Date   time.Time `gorm:"not null"`
 }
@@ -137,10 +139,12 @@ type Booking struct {
 	Track       Track         `gorm:"foreignKey:TrackID;references:ID"`
 	CustomerID  uint          `gorm:"not null"`
 	Customer    User          `gorm:"foreignKey:CustomerID;references:ID"`
+	RiderCount  uint          `gorm:"not null"`
 	Date        time.Time     `gorm:"type:date;not null"`
-	TimeStart   time.Time     `gorm:"type:time;not null"`
+	StartTime   time.Time     `gorm:"not null"`
+	EndTime     time.Time     `gorm:"not null"`
 	Duration    uint          `gorm:"not null"`
-	TotalPrice  float64       `gorm:"type:numeric(12, 2);not null"`
+	TotalPrice  float64       `gorm:"type:numeric(12,2);not null"`
 	BookingType BookingType   `gorm:"type:varchar(50);not null"`
 	Status      BookingStatus `gorm:"type:varchar(25);not null"`
 }
@@ -247,11 +251,16 @@ type KartodromSchedule struct {
 }
 
 type Kartodrom struct {
-	ID       uint   `gorm:"primaryKey"`
-	Name     string `gorm:"type:varchar(100);not null"`
-	Location string `gorm:"type:varchar(100);not null"`
-	Phone    string `gorm:"type:varchar(11);not null;unique"`
-	Email    string `gorm:"type:varchar(50);not null;unique"`
+	ID        uint    `gorm:"primaryKey"`
+	Name      string  `gorm:"type:varchar(100);not null"`
+	City      string  `gorm:"type:varchar(100);not null"`
+	Location  string  `gorm:"type:varchar(100);not null"`
+	Latitude  float64 `gorm:"not null"`
+	Longitude float64 `gorm:"not null"`
+	Phone     string  `gorm:"type:varchar(11);not null;unique"`
+	Email     string  `gorm:"type:varchar(50);not null;unique"`
+
+	Schedules []KartodromSchedule `gorm:"foreignKey:KartodromID" json:"schedules"`
 }
 
 type KartStat struct {
