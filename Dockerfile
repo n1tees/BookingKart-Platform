@@ -1,5 +1,5 @@
 # 1. Используем официальный базовый образ Go
-FROM golang:1.22-slim as builder
+FROM golang:1.24 as builder
 
 # 2. Создаем рабочую папку внутри контейнера
 WORKDIR /app
