@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: СВ (Deploy to VPS)
 
 on:
   push:
