@@ -19,8 +19,18 @@ jobs:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        timeout: 300
         script: |
-          cd /root/BookingKart-Platform
+          cd ~/BookingKart-Platform
           git pull origin main
+
+          echo "Останавливаем контейнеры..."
           docker-compose down
-          docker-compose up -d --build
+
+          echo "Собираем новое приложение..."
+          docker-compose build app
+
+          echo "Запускаем всё заново..."
+          docker-compose up -d
+
+          echo "Деплой завершён."
