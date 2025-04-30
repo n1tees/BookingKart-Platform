@@ -27,5 +27,15 @@ services:
       - "8080:8080"
     restart: always
 
+  nginx:
+    image: nginx:stable
+    container_name: bookingkart-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+
 volumes:
   postgres-data:
