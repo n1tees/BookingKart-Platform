@@ -18,7 +18,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: bookingkart-app
     depends_on:
       - db
     env_file:
