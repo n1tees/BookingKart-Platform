@@ -18,13 +18,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: bookingkart-app
     depends_on:
       - db
     env_file:
-      - .env
+      - /root/env/.env
     ports:
       - "8080:8080"
     restart: always
+
 
   nginx:
     image: nginx:stable

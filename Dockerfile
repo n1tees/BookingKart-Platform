@@ -12,6 +12,8 @@ RUN go mod download
 
 # 5. Копируем исходный код проекта
 COPY . .
+COPY .env .env
+
 
 # 6. Собираем приложение в бинарный файл
 RUN go build -o bookingkart-platform ./cmd/main.go
