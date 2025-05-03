@@ -19,7 +19,7 @@ jobs:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        timeout: 5m
+        timeout: 15m
         script: |
           cd ~/BookingKart-Platform
           git pull origin main
