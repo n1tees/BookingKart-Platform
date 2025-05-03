@@ -15,17 +15,16 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: bookingkart-app
-    depends_on:
-      - db
-    env_file:
-      - /root/env/.env
-    ports:
-      - "8080:8080"
-    restart: always
+  build:
+    context: .
+    dockerfile: Dockerfile
+  container_name: bookingkart-app
+  volumes:
+    - /root/env/.env:/app/.env
+  ports:
+    - "8080:8080"
+  restart: always
+
 
 
   nginx:
