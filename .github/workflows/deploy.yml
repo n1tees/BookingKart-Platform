@@ -10,27 +10,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Deploy over SSH
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        timeout: 15m
-        script: |
-          cd ~/BookingKart-Platform
-          git pull origin main
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23
 
-          echo "Останавливаем контейнеры..."
-          docker-compose down
+      - name: Build Go binary
+        run: go build -o bookingkart-platform ./cmd/main.go
 
-          echo "Собираем новое приложение..."
-          docker-compose build app
+      - name: Upload binary to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "bookingkart-platform"
+          target: "~/BookingKart-Platform"
 
-          echo "Запускаем всё заново..."
-          docker-compose up -d
-
-          echo "Деплой завершён."
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          timeout: 15m
+          script: |
+            cd ~/BookingKart-Platform
+            cp /root/env/.env .env
+            docker-compose down
+            docker-compose up -d
