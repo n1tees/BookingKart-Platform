@@ -6,26 +6,22 @@ services:
     container_name: bookingkart-db
     restart: always
     environment:
-      POSTGRES_USER: youruser
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: bookingkartdb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
   app:
-  build:
-    context: .
-    dockerfile: Dockerfile
-  container_name: bookingkart-app
-  volumes:
-    - /root/env/.env:/app/.env
-  ports:
-    - "8080:8080"
-  restart: always
-
-
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bookingkart-app
+    ports:
+      - "8080:8080"
+    restart: always
 
   nginx:
     image: nginx:stable

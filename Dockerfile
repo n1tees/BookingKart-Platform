@@ -19,7 +19,7 @@ COPY .env .env
 RUN go build -o bookingkart-platform ./cmd/main.go
 
 # 7. Минимизируем финальный образ
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # 8. Создаем рабочую папку в финальном контейнере
 WORKDIR /app

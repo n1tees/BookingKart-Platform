@@ -1,12 +1,12 @@
 package main
 
 import (
-	"BookingKart-Platform/config"
-	"BookingKart-Platform/internal/db"
+	"github.com/n1tees/BookingKart-Platform/config"
+	"github.com/n1tees/BookingKart-Platform/internal/db"
 )
 
 func main() {
-	config.LoadEnv()
+	config.LoadEnvgodotenv.Load()
 	db.InitDB()
 
 	// Здесь позже запустим сервер

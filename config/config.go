@@ -9,7 +9,7 @@ import (
 
 // читаем переменные окружения из .env
 func LoadEnv() {
-	err := godotenv.Load("/app/.env")
+	err := godotenv.Load("app/.env")
 	if err != nil {
 		log.Fatal("Ошибка загрузки .env файла")
 	}
