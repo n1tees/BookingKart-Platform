@@ -5,6 +5,5 @@
     container_name: bookingkart-app
     ports:
       - "8080:8080"
-    restart: always
     volumes:
       - /root/env/.env:/app/.env  
