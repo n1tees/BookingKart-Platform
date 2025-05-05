@@ -1,18 +1,40 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 )
 
 // читаем переменные окружения из .env
 func LoadEnv() {
-	err := godotenv.Load("app/.env")
+	envPath := "app/.env"
+
+	// Проверим существование файла
+	absPath, err := filepath.Abs(envPath)
 	if err != nil {
-		log.Fatal("Ошибка загрузки .env файла")
+		log.Fatalf("Не удалось определить абсолютный путь до %s: %v", envPath, err)
 	}
+
+	_, statErr := os.Stat(envPath)
+	if os.IsNotExist(statErr) {
+		log.Fatalf(".env файл не найден по пути: %s", absPath)
+	} else if statErr != nil {
+		log.Fatalf("Ошибка при попытке доступа к .env: %v", statErr)
+	} else {
+		fmt.Printf(".env файл найден по пути: %s\n", absPath)
+	}
+
+	// Попытка загрузки .env
+	loadErr := godotenv.Load(envPath)
+	if loadErr != nil {
+		log.Fatalf("Ошибка при загрузке .env файла (%s): %v", absPath, loadErr)
+	}
+
+	fmt.Println(".env успешно загружен.")
 }
 
 // собираем строку для подключения к БД
