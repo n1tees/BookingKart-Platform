@@ -41,5 +41,10 @@ jobs:
           timeout: 15m
           script: |
             cd ~/BookingKart-Platform
+        
+            echo "Копируем .env..."
+            cp /root/env/.env .env
+        
+            echo "Перезапускаем контейнеры..."
             docker-compose down
-            docker-compose up -d
+            docker-compose up -d --build
