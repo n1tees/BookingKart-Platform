@@ -21,14 +21,16 @@ jobs:
       - name: Build Go binary
         run: go build -x -o bookingkart-platform ./cmd/main.go
 
-      - name: Upload binary to server
+      - name: Upload project files to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "bookingkart-platform"
+          source: "."
           target: "~/BookingKart-Platform"
+          strip_components: 1
+      
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v0.1.6
