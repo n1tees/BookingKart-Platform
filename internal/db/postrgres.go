@@ -19,12 +19,12 @@ func InitDB() {
 		log.Fatalf("Ошибка подключения к БД: %v", err)
 	}
 
-	if err := Migrate(db); err != nil {
-		log.Fatalf("Ошибка миграции базы данных: %v", err)
-	}
+	// if err := Migrate(db); err != nil {
+	// 	log.Fatalf("Ошибка миграции базы данных: %v", err)
+	// }
 
 	DB = db
-	log.Println("Успешное подключение к базе данных и выполнены миграции")
+	// log.Println("Успешное подключение к базе данных и выполнены миграции")
 }
 
 func Migrate(db *gorm.DB) error {
