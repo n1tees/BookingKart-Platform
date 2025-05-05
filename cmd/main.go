@@ -10,7 +10,7 @@ import (
 func main() {
 	config.LoadEnv()
 
-	time.Sleep(1 * time.Second)
+	time.Sleep(2 * time.Second)
 
 	db.InitDB()
 
