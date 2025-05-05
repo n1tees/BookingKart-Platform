@@ -18,23 +18,5 @@ services:
         target: /app/.env
         read_only: true
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: bookingkart-app
-    ports:
-      - "8080:8080"
-    restart: always
-    depends_on:
-      - db
-    env_file:
-      - .env
-    volumes:
-      - type: bind
-        source: /root/env/.env
-        target: /app/.env
-        read_only: true
-
 volumes:
   postgres-data:
