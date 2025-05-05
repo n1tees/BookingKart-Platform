@@ -11,7 +11,7 @@ import (
 
 // читаем переменные окружения из .env
 func LoadEnv() {
-	envPath := "app/.env"
+	envPath := ".env"
 
 	// Проверим существование файла
 	absPath, err := filepath.Abs(envPath)
