@@ -24,6 +24,11 @@ services:
     restart: always
     env_file:
       - .env
+    volumes:
+      - type: bind
+        source: /root/env/.env
+        target: /app/.env
+        read_only: true
 
 volumes:
   postgres-data:
