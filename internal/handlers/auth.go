@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/n1tees/BookingKart-Platform/internal/services"
@@ -9,10 +10,21 @@ import (
 
 func RegisterHandler(c *gin.Context) {
 	var input services.RegisterInput
+
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "неверный формат запроса"})
 		return
 	}
+
+	// Парсим дату рождения
+	birth, err := time.Parse("2006-01-02", input.BirthDay)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "неверный формат даты. Ожидается YYYY-MM-DD"})
+		return
+	}
+
+	// Передаём дату в структуру
+	input.ParsedBirthDay = birth
 
 	userID, err := services.RegUser(input)
 	if err != nil {

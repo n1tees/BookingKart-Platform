@@ -17,12 +17,13 @@ import (
 
 // Структура данных для создания
 type RegisterInput struct {
-	FName    string    `json:"fname"`
-	Phone    string    `json:"phone"`
-	Email    string    `json:"email"`
-	BirthDay time.Time `json:"birthday"`
-	Login    string    `json:"login"`
-	Password string    `json:"password"`
+	FName          string    `json:"fname"`
+	Phone          string    `json:"phone"`
+	Email          string    `json:"email"`
+	BirthDay       string    `json:"birthday"`
+	Login          string    `json:"login"`
+	Password       string    `json:"password"`
+	ParsedBirthDay time.Time `json:"-"`
 }
 
 // Cтруктура данных для атворизации
@@ -72,7 +73,7 @@ func RegUser(input RegisterInput) (uint, error) {
 		profile := models.Profile{
 			FName:    input.FName,
 			Phone:    input.Phone,
-			BirthDay: input.BirthDay,
+			BirthDay: input.ParsedBirthDay,
 		}
 		if err := tx.Create(&profile).Error; err != nil {
 			return errors.New("ошибка создания профиля")
