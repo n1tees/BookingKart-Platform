@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -25,7 +24,7 @@ func LoadEnv() {
 	} else if statErr != nil {
 		log.Fatalf("Ошибка при попытке доступа к .env: %v", statErr)
 	} else {
-		fmt.Printf(".env файл найден по пути: %s\n", absPath)
+		log.Printf(".env файл найден по пути: %s\n", absPath)
 	}
 
 	// Попытка загрузки .env
@@ -34,7 +33,7 @@ func LoadEnv() {
 		log.Fatalf("Ошибка при загрузке .env файла (%s): %v", absPath, loadErr)
 	}
 
-	fmt.Println(".env успешно загружен.")
+	log.Println(".env успешно загружен.")
 }
 
 // собираем строку для подключения к БД

@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 
 	"github.com/n1tees/BookingKart-Platform/config"
 	"github.com/n1tees/BookingKart-Platform/internal/models"
@@ -14,17 +15,31 @@ var DB *gorm.DB
 
 func InitDB() {
 	dsn := config.GetDBConnString()
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	})
 	if err != nil {
 		log.Fatalf("Ошибка подключения к БД: %v", err)
 	}
+	log.Println("Успешное подключение к базе данных, подготовка к выполнению миграции")
 
-	// if err := Migrate(db); err != nil {
-	// 	log.Fatalf("Ошибка миграции базы данных: %v", err)
-	// }
+	if err := Migrate(db); err != nil {
+		log.Fatalf("Ошибка миграции базы данных: %v", err)
+	}
 
 	DB = db
-	// log.Println("Успешное подключение к базе данных и выполнены миграции")
+	log.Println("Успешное выполнение миграций")
+}
+
+func CloseDB() {
+	sqlDB, err := DB.DB()
+	if err != nil {
+		log.Printf("Ошибка при получении SQL-соединения: %v", err)
+		return
+	}
+	sqlDB.Close()
 }
 
 func Migrate(db *gorm.DB) error {

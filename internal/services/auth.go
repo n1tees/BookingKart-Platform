@@ -19,6 +19,7 @@ import (
 type RegisterInput struct {
 	FName    string    `json:"fname"`
 	Phone    string    `json:"phone"`
+	Email    string    `json:"email"`
 	BirthDay time.Time `json:"birthday"`
 	Login    string    `json:"login"`
 	Password string    `json:"password"`
@@ -35,7 +36,12 @@ func RegUser(input RegisterInput) (uint, error) {
 
 	// Проверка, что логин свободен
 	if _, err := searchAuthByLogin(input.Login); err == nil {
-		return 0, errors.New("логин уже используется")
+		return 0, errors.New("такой логин занят")
+	}
+
+	// Проверка, что телефон свободен
+	if _, err := searchProfileByPhone(input.Phone); err == nil {
+		return 0, errors.New("номер телефона привязан к другому аккаунту")
 	}
 
 	// Хешируем пароль
@@ -49,6 +55,7 @@ func RegUser(input RegisterInput) (uint, error) {
 	mu.Lock()
 	defer mu.Unlock()
 
+	var user models.User
 	// Начинаем транзакцию
 	err = db.DB.Transaction(func(tx *gorm.DB) error {
 
@@ -72,7 +79,7 @@ func RegUser(input RegisterInput) (uint, error) {
 		}
 
 		// 3. Создаём User
-		user := models.User{
+		user = models.User{
 			UserType:  models.Customer,
 			AuthID:    auth.ID,
 			ProfileID: profile.ID,
@@ -89,11 +96,6 @@ func RegUser(input RegisterInput) (uint, error) {
 	}
 
 	// Если всё ок — получить ID пользователя
-	var user models.User
-	if err := db.DB.Where("auth_id = ?", input.Login).First(&user).Error; err != nil {
-		return 0, errors.New("ошибка получения пользователя после регистрации")
-	}
-
 	return user.ID, nil
 }
 

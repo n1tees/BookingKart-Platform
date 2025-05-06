@@ -1,16 +1,11 @@
 package routes
 
 import (
-	_ "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
+	"github.com/n1tees/BookingKart-Platform/internal/handlers"
 )
 
-// func InitRoutes(router *gin.Engine) {
-// 	// Пример
-// 	router.POST("/auth/login", auth.LoginHandler)
-
-// 	karts := router.Group("/karts")
-// 	{
-// 		karts.GET("", handlers.GetAllKarts)
-// 		karts.POST("", handlers.CreateKart)
-// 	}
-// }
+func InitAuthRoutes(r *gin.Engine) {
+	r.POST("/api/register", handlers.RegisterHandler)
+	r.POST("/api/login", handlers.LoginHandler)
+}

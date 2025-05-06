@@ -4,6 +4,7 @@ import (
 	"github.com/n1tees/BookingKart-Platform/internal/db"
 	"github.com/n1tees/BookingKart-Platform/internal/models"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"errors"
 	"sync"
@@ -117,8 +118,30 @@ func searchAuthByLogin(login string) (*models.AuthCredential, error) {
 	var auth models.AuthCredential
 	err := db.DB.Where("login = ?", login).First(&auth).Error
 	if err != nil {
-		return nil, errors.New("учётные данные не найдены")
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("учётные данные не найдены по указанному логину")
+
+		} else {
+			return nil, errors.New("ошибка при поиске профиля по логину")
+		}
 	}
 
 	return &auth, nil
+}
+
+func searchProfileByPhone(phone string) (*models.Profile, error) {
+
+	var profile models.Profile
+	err := db.DB.Where("phone = ?", phone).First(&profile).Error
+	if err != nil {
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("учётные данные не найдены по указанному номеру")
+
+		} else {
+			return nil, errors.New("ошибка при поиске профиля по номеру телефону")
+		}
+	}
+	return &profile, nil
 }
