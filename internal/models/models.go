@@ -74,7 +74,7 @@ const (
 type KartStatus string
 
 const (
-	Availible  KartStatus = "Доступен"
+	Available  KartStatus = "Доступен"
 	InUse      KartStatus = "В использовании"
 	Broken     KartStatus = "Сломан"
 	InStopList KartStatus = "Недоступен"

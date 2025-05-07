@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 
 	"errors"
+	"fmt"
+	"strings"
 	"sync"
 )
 
@@ -18,14 +20,49 @@ type ChangePasswordInput struct {
 }
 
 // Частичное обновление пользователя
-func PatchUserInfo(userID uint, updates map[string]interface{}) error {
+func UpdateProfile(userID uint, updates map[string]interface{}) error {
 
 	user, err := searchUserByID(userID)
 	if err != nil {
 		return err
 	}
 
-	if err := db.DB.Model(&models.Profile{}).Where("id = ?", user.ProfileID).Updates(updates).Error; err != nil {
+	filtered := make(map[string]interface{})
+	for key, value := range updates {
+		if value == nil {
+			continue
+		}
+		switch v := value.(type) {
+		case string:
+			if strings.TrimSpace(v) == "" {
+				continue
+			}
+			filtered[key] = v
+		case float64:
+			if v == 0 {
+				continue
+			}
+			filtered[key] = v
+		case int, int32, int64:
+			if fmt.Sprintf("%v", v) == "0" {
+				continue
+			}
+			filtered[key] = v
+		case bool:
+			if !v {
+				continue
+			}
+			filtered[key] = v
+		default:
+			filtered[key] = v
+		}
+	}
+
+	if len(filtered) == 0 {
+		return errors.New("пустой запрос")
+	}
+
+	if err := db.DB.Model(&models.Profile{}).Where("id = ?", user.ProfileID).Updates(filtered).Error; err != nil {
 		return errors.New("ошибка при обновлении профиля")
 	}
 
@@ -42,7 +79,12 @@ func GetUserInfo(userID uint) (*models.Profile, error) {
 
 	var profile models.Profile
 	if err := db.DB.First(&profile, user.ProfileID).Error; err != nil {
-		return nil, errors.New("профиль не найден")
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("пользователь не найден")
+
+		} else {
+			return nil, errors.New("ошибка при поиске пользователя")
+		}
 	}
 
 	return &profile, nil
@@ -96,7 +138,13 @@ func searchUserByAuth(auth *models.AuthCredential) (*models.User, error) {
 
 	var user models.User
 	if err := db.DB.Where("auth_id = ?", auth.ID).First(&user).Error; err != nil {
-		return nil, errors.New("пользователь не найден")
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("пользователь не найден")
+
+		} else {
+			return nil, errors.New("ошибка при поиске пользователя")
+		}
 	}
 
 	return &user, nil
@@ -107,7 +155,13 @@ func searchUserByID(id uint) (*models.User, error) {
 
 	var user models.User
 	if err := db.DB.First(&user, id).Error; err != nil {
-		return nil, errors.New("пользователь не найден")
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("профиль не найден")
+
+		} else {
+			return nil, errors.New("ошибка при поиске профиля")
+		}
 	}
 	return &user, nil
 }
@@ -120,27 +174,27 @@ func searchAuthByLogin(login string) (*models.AuthCredential, error) {
 	if err != nil {
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("учётные данные не найдены по указанному логину")
+			return nil, errors.New("учётные данные не найдены")
 
 		} else {
-			return nil, errors.New("ошибка при поиске профиля по логину")
+			return nil, errors.New("ошибка при поиске учетных данных")
 		}
 	}
 
 	return &auth, nil
 }
 
+// поиск по телефону
 func searchProfileByPhone(phone string) (*models.Profile, error) {
 
 	var profile models.Profile
-	err := db.DB.Where("phone = ?", phone).First(&profile).Error
-	if err != nil {
+	if err := db.DB.Where("phone = ?", phone).First(&profile).Error; err != nil {
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("учётные данные не найдены по указанному номеру")
+			return nil, errors.New("профиль не найден")
 
 		} else {
-			return nil, errors.New("ошибка при поиске профиля по номеру телефону")
+			return nil, errors.New("ошибка при поиске профиля")
 		}
 	}
 	return &profile, nil

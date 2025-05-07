@@ -3,23 +3,28 @@ package services
 import (
 	"github.com/n1tees/BookingKart-Platform/internal/db"
 	"github.com/n1tees/BookingKart-Platform/internal/models"
+	"gorm.io/gorm"
 
 	"errors"
 	"time"
 )
 
 // Получить доступные треки на картодроме
-func GetAvailableTracks(kartodromID uint) ([]models.Track, error) {
-	var allTracks []models.Track
+func GetAvailableTracks(kartodromID uint) (*[]models.Track, error) {
 
 	// Сначала получаем все треки картодрома
+	var allTracks []models.Track
 	if err := db.DB.Where("kartodrom_id = ?", kartodromID).Find(&allTracks).Error; err != nil {
-		return nil, errors.New("ошибка при получении треков картодрома")
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("треки не найдены")
+
+		} else {
+			return nil, errors.New("ошибка при поиске треков")
+		}
 	}
 
-	var availableTracks []models.Track
-
 	// Фильтрация по количеству райдеров
+	var availableTracks []models.Track
 	for _, track := range allTracks {
 		count, err := CountRidersOnTrack(track.ID)
 		if err != nil {
@@ -31,32 +36,41 @@ func GetAvailableTracks(kartodromID uint) ([]models.Track, error) {
 		}
 	}
 
-	return availableTracks, nil
+	return &availableTracks, nil
 }
 
 // Посчитать количество райдеров на треке
 func CountRidersOnTrack(trackID uint) (uint, error) {
-
 	now := time.Now()
 
-	var count int64
+	var totalRiders uint
 
-	if err := db.DB.Model(&models.Booking{}).
+	err := db.DB.Model(&models.Booking{}).
+		Select("COALESCE(SUM(rider_count), 0)").
 		Where("track_id = ? AND status = ? AND start_time <= ? AND end_time >= ?",
 			trackID, models.BookingActive, now, now).
-		Count(&count).Error; err != nil {
-		return 0, errors.New("ошибка при подсчёте активных райдеров на треке")
+		Scan(&totalRiders).Error
+
+	if err != nil {
+		return 0, errors.New("ошибка при подсчёте райдеров на треке")
 	}
 
-	return uint(count), nil
+	return totalRiders, nil
 }
 
 // Получить трек по id
 func GetTrackByID(trackID uint) (*models.Track, error) {
+
 	var track models.Track
 
 	if err := db.DB.First(&track, trackID).Error; err != nil {
-		return nil, errors.New("трек не найден")
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("трек не найден")
+
+		} else {
+			return nil, errors.New("ошибка при поиске трека")
+		}
 	}
 
 	return &track, nil

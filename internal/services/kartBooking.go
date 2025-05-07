@@ -13,7 +13,7 @@ import (
 func GetAvailableKartsForBooking(kartodromID uint, start time.Time, end time.Time) (*[]models.Kart, error) {
 	// 1. Сначала находим все карты в нужном картодроме, которые не сломаны и не в стоп-листе
 	var allKarts []models.Kart
-	if err := db.DB.Where("kartodrom_id = ? AND kart_status = ?", kartodromID, models.Availible).
+	if err := db.DB.Where("kartodrom_id = ? AND kart_status = ?", kartodromID, models.Available).
 		Find(&allKarts).Error; err != nil {
 		return nil, errors.New("ошибка при получении списка картов")
 	}
@@ -118,7 +118,7 @@ func FinishKartBooking(bookingID uint, kartID uint) error {
 		}
 
 		// Освобождаем карт
-		if err := tx.Model(&models.Kart{}).Where("id = ?", kartID).Update("kart_status", models.Availible).Error; err != nil {
+		if err := tx.Model(&models.Kart{}).Where("id = ?", kartID).Update("kart_status", models.Available).Error; err != nil {
 			return errors.New("ошибка при освобождении карта")
 		}
 
@@ -144,7 +144,7 @@ func CancelKartBooking(bookingID uint, kartID uint) error {
 		}
 
 		// Освобождаем карт
-		if err := tx.Model(&models.Kart{}).Where("id = ?", kartID).Update("kart_status", models.Availible).Error; err != nil {
+		if err := tx.Model(&models.Kart{}).Where("id = ?", kartID).Update("kart_status", models.Available).Error; err != nil {
 			return errors.New("ошибка при освобождении карта")
 		}
 

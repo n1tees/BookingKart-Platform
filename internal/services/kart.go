@@ -18,9 +18,15 @@ func GetAvailableKarts(kartodromID uint) (*[]models.Kart, error) {
 	var karts []models.Kart
 
 	if err := db.DB.
-		Where("kartodrom_id = ? AND kart_status = ?", kartodromID, models.Availible).
+		Where("kartodrom_id = ? AND status = ?", kartodromID, models.Available).
 		Find(&karts).Error; err != nil {
-		return nil, errors.New("ошибка при получении доступных картов")
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+
+			return nil, errors.New("карты не найдены")
+
+		} else {
+			return nil, errors.New("ошибка при поиске картов")
+		}
 	}
 
 	return &karts, nil
@@ -34,14 +40,19 @@ func BookKart(kartID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var kart models.Kart
 		if err := tx.First(&kart, kartID).Error; err != nil {
-			return errors.New("карт не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("карт не найден")
+
+			} else {
+				return errors.New("ошибка при поиске карта")
+			}
 		}
 
-		if kart.Status != models.Availible {
+		if kart.Status != models.Available {
 			return errors.New("карт недоступен для бронирования")
 		}
 
-		if err := tx.Model(&kart).Update("kart_status", models.InUse).Error; err != nil {
+		if err := tx.Model(&kart).Update("status", models.InUse).Error; err != nil {
 			return errors.New("ошибка при обновлении статуса карта")
 		}
 
@@ -57,10 +68,16 @@ func FreeKart(kartID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var kart models.Kart
 		if err := tx.First(&kart, kartID).Error; err != nil {
-			return errors.New("карт не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+
+				return errors.New("карт не найден")
+
+			} else {
+				return errors.New("ошибка при поиске карта")
+			}
 		}
 
-		if err := tx.Model(&kart).Update("kart_status", models.Availible).Error; err != nil {
+		if err := tx.Model(&kart).Update("status", models.Available).Error; err != nil {
 			return errors.New("ошибка при обновлении статуса карта")
 		}
 
@@ -76,10 +93,15 @@ func SetKartBroken(kartID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var kart models.Kart
 		if err := tx.First(&kart, kartID).Error; err != nil {
-			return errors.New("карт не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("карт не найден")
+
+			} else {
+				return errors.New("ошибка при поиске карта")
+			}
 		}
 
-		if err := tx.Model(&kart).Update("kart_status", models.Broken).Error; err != nil {
+		if err := tx.Model(&kart).Update("status", models.Broken).Error; err != nil {
 			return errors.New("ошибка при обновлении статуса карта")
 		}
 
@@ -95,10 +117,15 @@ func RepairKart(kartID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var kart models.Kart
 		if err := tx.First(&kart, kartID).Error; err != nil {
-			return errors.New("карт не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("карт не найден")
+
+			} else {
+				return errors.New("ошибка при поиске карта")
+			}
 		}
 
-		if err := tx.Model(&kart).Update("kart_status", models.Availible).Error; err != nil {
+		if err := tx.Model(&kart).Update("status", models.Available).Error; err != nil {
 			return errors.New("ошибка при обновлении статуса карта")
 		}
 
@@ -114,10 +141,16 @@ func SetKartInStopList(kartID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var kart models.Kart
 		if err := tx.First(&kart, kartID).Error; err != nil {
-			return errors.New("карт не найден")
+
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("карт не найден")
+
+			} else {
+				return errors.New("ошибка при поиске карта")
+			}
 		}
 
-		if err := tx.Model(&kart).Update("kart_status", models.InStopList).Error; err != nil {
+		if err := tx.Model(&kart).Update("status", models.InStopList).Error; err != nil {
 			return errors.New("ошибка при обновлении статуса карта")
 		}
 
