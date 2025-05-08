@@ -12,11 +12,16 @@ import (
 
 // Стуктура ввода для заезда
 type RaceInput struct {
-	TrackID  uint
-	Date     time.Time
-	RaceType models.RaceType
-	Laps     uint
-	Duration uint
+	TrackID   uint
+	Date      string
+	TimeStart string
+	RaceType  models.RaceType
+	Laps      uint
+	Duration  uint
+	Status    models.RaceStatus
+
+	ParsedDate      time.Time `json:"-"`
+	ParsedTimeStart time.Time `json:"-"`
 }
 
 // Создание заезда
@@ -31,16 +36,23 @@ func CreateRace(input RaceInput) (uint, error) {
 		// Проверяем трек
 		var track models.Track
 		if err := tx.First(&track, input.TrackID).Error; err != nil {
-			return errors.New("трек не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("трек не найден")
+
+			} else {
+				return errors.New("ошибка при поиске трека")
+			}
 		}
 
 		newRace = models.Race{
-			TrackID:  input.TrackID,
-			Date:     input.Date,
-			RaceType: input.RaceType,
-			Laps:     input.Laps,
-			Duration: input.Duration,
-			Status:   models.RaceCreate,
+			TrackID:    input.TrackID,
+			Date:       input.ParsedDate,
+			TimeStart:  input.ParsedTimeStart,
+			Laps:       input.Laps,
+			Duration:   input.Duration,
+			TotalPrice: track.PricePerMin * float64(input.Duration),
+			RaceType:   input.RaceType,
+			Status:     models.RaceCreate,
 		}
 
 		if err := tx.Create(&newRace).Error; err != nil {
@@ -66,7 +78,13 @@ func StartRace(raceID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var race models.Race
 		if err := tx.First(&race, raceID).Error; err != nil {
-			return errors.New("заезд не найден")
+
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("заезд не найден")
+
+			} else {
+				return errors.New("ошибка при поиске заезда")
+			}
 		}
 
 		if race.Status != models.RaceCreate {
@@ -90,7 +108,12 @@ func FinishRace(raceID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var race models.Race
 		if err := tx.First(&race, raceID).Error; err != nil {
-			return errors.New("заезд не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("заезд не найден")
+
+			} else {
+				return errors.New("ошибка при поиске заезда")
+			}
 		}
 
 		if race.Status != models.RaceStart {
@@ -114,7 +137,13 @@ func CancelRace(raceID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var race models.Race
 		if err := tx.First(&race, raceID).Error; err != nil {
-			return errors.New("заезд не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("заезд не найден")
+
+			} else {
+
+				return errors.New("ошибка при поиске заезда")
+			}
 		}
 
 		if race.Status != models.RaceCreate {
@@ -138,7 +167,12 @@ func UpdateRaceStatus(raceID uint, newStatus models.RaceStatus) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var race models.Race
 		if err := tx.First(&race, raceID).Error; err != nil {
-			return errors.New("заезд не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("заезд не найден")
+
+			} else {
+				return errors.New("ошибка при поиске заезда")
+			}
 		}
 
 		switch newStatus {
