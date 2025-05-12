@@ -9,22 +9,27 @@ import (
 	"time"
 )
 
-// Получить доступные треки на картодроме
-func GetAvailableTracks(kartodromID uint) (*[]models.Track, error) {
+type AvailableTrack struct {
+	ID          uint
+	Name        string
+	Length      uint
+	DifLevel    models.DifLevel
+	PricePerMin float64
+	MaxKarts    uint
+	FreeSlots   uint
+}
 
-	// Сначала получаем все треки картодрома
+// Получить доступные треки на картодроме
+func GetAvailableTracks(kartodromID uint) (*[]AvailableTrack, error) {
 	var allTracks []models.Track
 	if err := db.DB.Where("kartodrom_id = ?", kartodromID).Find(&allTracks).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("треки не найдены")
-
-		} else {
-			return nil, errors.New("ошибка при поиске треков")
 		}
+		return nil, errors.New("ошибка при поиске треков")
 	}
 
-	// Фильтрация по количеству райдеров
-	var availableTracks []models.Track
+	var result []AvailableTrack
 	for _, track := range allTracks {
 		count, err := CountRidersOnTrack(track.ID)
 		if err != nil {
@@ -32,11 +37,19 @@ func GetAvailableTracks(kartodromID uint) (*[]models.Track, error) {
 		}
 
 		if count < track.MaxKarts {
-			availableTracks = append(availableTracks, track)
+			result = append(result, AvailableTrack{
+				ID:          track.ID,
+				Name:        track.Name,
+				Length:      track.Length,
+				DifLevel:    track.DifLevel,
+				PricePerMin: track.PricePerMin,
+				MaxKarts:    track.MaxKarts,
+				FreeSlots:   track.MaxKarts - count,
+			})
 		}
 	}
 
-	return &availableTracks, nil
+	return &result, nil
 }
 
 // Посчитать количество райдеров на треке

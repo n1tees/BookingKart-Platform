@@ -170,7 +170,7 @@ type Race struct {
 	ID         uint `gorm:"primaryKey"`
 	TrackID    uint
 	Track      Track
-	Date       time.Time  `gorm:"type:date"`
+	Date       time.Time  `gorm:"type:date;not null"`
 	TimeStart  time.Time  `gorm:"type:time;not null"`
 	Duration   uint       `gorm:"not null"`
 	Laps       uint       `gorm:"not null"`

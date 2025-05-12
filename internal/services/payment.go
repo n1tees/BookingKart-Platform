@@ -99,6 +99,16 @@ func RefundToBalance(userID uint, amount float64) error {
 			return errors.New("ошибка при возврате денег на баланс")
 		}
 
+		// Записываем пополнение в payments
+		payment := models.Payment{
+			UserID: userID,
+			Amount: -amount,
+			Date:   time.Now(),
+		}
+		if err := tx.Create(&payment).Error; err != nil {
+			return errors.New("ошибка при записи платежа")
+		}
+
 		return nil
 	})
 }

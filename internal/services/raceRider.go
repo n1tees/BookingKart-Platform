@@ -14,13 +14,19 @@ func RegisterRider(raceID, riderID uint) error {
 		// Проверяем гонку
 		var race models.Race
 		if err := tx.First(&race, raceID).Error; err != nil {
-			return errors.New("гонка не найдена")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("заезд не найден")
+			}
+			return errors.New("ошибка при поиске заезда")
 		}
 
 		// Проверяем пользователя
 		var rider models.User
 		if err := tx.First(&rider, riderID).Error; err != nil {
-			return errors.New("пользователь не найден")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("пользователь не найден")
+			}
+			return errors.New("ошибка при поиске пользователя")
 		}
 
 		// Проверяем, не зарегистрирован ли уже райдер
@@ -33,7 +39,7 @@ func RegisterRider(raceID, riderID uint) error {
 		newRider := models.RaceRider{
 			RaceID:         raceID,
 			RiderID:        riderID,
-			ResultTypeID:   1, // по умолчанию "Участник", ID можно будет уточнить
+			ResultTypeID:   0, // по умолчанию "Участник", ID можно будет уточнить
 			PersonalResult: 0,
 		}
 
@@ -51,7 +57,10 @@ func RemoveRider(raceID, riderID uint) error {
 		// Проверяем существование райдера в гонке
 		var rider models.RaceRider
 		if err := tx.Where("race_id = ? AND rider_id = ?", raceID, riderID).First(&rider).Error; err != nil {
-			return errors.New("участник не найден в этой гонке")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("пользователь не найден")
+			}
+			return errors.New("ошибка при поиске пользователя")
 		}
 
 		// Удаляем райдера
@@ -69,7 +78,10 @@ func AddRaceResult(raceID, riderID, resultTypeID, personalResult uint) error {
 		// Находим участника в гонке
 		var rider models.RaceRider
 		if err := tx.Where("race_id = ? AND rider_id = ?", raceID, riderID).First(&rider).Error; err != nil {
-			return errors.New("участник не найден в этой гонке")
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("пользователь не найден")
+			}
+			return errors.New("ошибка при поиске пользователя")
 		}
 
 		// Обновляем результат
