@@ -1,6 +1,8 @@
 package models
 
 import (
+	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -130,7 +132,7 @@ type RaceRider struct {
 	Race           Race
 	ResultTypeID   uint
 	ResultType     ResultType
-	PersonalResult uint `gorm:"not null"`
+	PersonalResult uint
 }
 
 type Booking struct {
@@ -141,8 +143,8 @@ type Booking struct {
 	Customer    User
 	RiderCount  uint          `gorm:"not null"`
 	Date        time.Time     `gorm:"type:date;not null"`
-	StartTime   time.Time     `gorm:"not null"`
-	EndTime     time.Time     `gorm:"not null"`
+	StartTime   LocalTime     `gorm:"type:time;not null"`
+	EndTime     LocalTime     `gorm:"type:time;not null"`
 	Duration    uint          `gorm:"not null"`
 	TotalPrice  float64       `gorm:"type:numeric(12,2);not null"`
 	BookingType BookingType   `gorm:"type:varchar(50);not null"`
@@ -170,10 +172,10 @@ type Race struct {
 	ID         uint `gorm:"primaryKey"`
 	TrackID    uint
 	Track      Track
-	Date       time.Time  `gorm:"type:date;not null"`
-	TimeStart  time.Time  `gorm:"type:time;not null"`
-	Duration   uint       `gorm:"not null"`
-	Laps       uint       `gorm:"not null"`
+	Date       time.Time `gorm:"type:date;not null"`
+	TimeStart  LocalTime `gorm:"type:time;not null"`
+	Duration   uint      `gorm:"not null"`
+	Laps       uint
 	TotalPrice float64    `gorm:"type:numeric(12, 2);not null"`
 	RaceType   RaceType   `gorm:"type:varchar(50);not null"`
 	Status     RaceStatus `gorm:"type:varchar(25);not null"`
@@ -271,4 +273,29 @@ type KartStat struct {
 	TotalCustomer uint      `gorm:"not null"`
 	TotalTime     uint      `gorm:"not null"`
 	TotalRevenue  float64   `gorm:"type:numeric(12, 2);not null"`
+}
+
+type LocalTime struct {
+	time.Time
+}
+
+func (lt *LocalTime) Scan(value interface{}) error {
+	switch v := value.(type) {
+	case time.Time:
+		lt.Time = v
+		return nil
+	case string:
+		t, err := time.Parse("15:04:05", v)
+		if err != nil {
+			return err
+		}
+		lt.Time = t
+		return nil
+	default:
+		return fmt.Errorf("unsupported type %T for LocalTime", v)
+	}
+}
+
+func (lt LocalTime) Value() (driver.Value, error) {
+	return lt.Format("15:04:05"), nil
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 	"time"
 
@@ -14,10 +15,11 @@ import (
 type BookingInput struct {
 	TrackID     uint
 	CustomerID  uint
-	StartTime   time.Time
-	Duration    uint // в минутах
+	Date        models.LocalTime
+	StartTime   models.LocalTime
+	Duration    uint
 	BookingType models.BookingType
-	RiderCount  uint // если пусто → ставим 1
+	RiderCount  uint
 }
 
 // Создание бронирования
@@ -37,7 +39,7 @@ func ReserveBooking(input BookingInput) (uint, error) {
 		}
 
 		riderCount := input.RiderCount
-		if riderCount == 0 {
+		if riderCount <= 0 {
 			riderCount = 1
 		}
 
@@ -54,11 +56,13 @@ func ReserveBooking(input BookingInput) (uint, error) {
 		)
 
 		newBooking = models.Booking{
-			TrackID:     input.TrackID,
-			CustomerID:  input.CustomerID,
-			Date:        date,
-			StartTime:   input.StartTime,
-			EndTime:     input.StartTime.Add(time.Duration(input.Duration) * time.Minute),
+			TrackID:    input.TrackID,
+			CustomerID: input.CustomerID,
+			Date:       date,
+			StartTime:  input.StartTime,
+			EndTime: models.LocalTime{
+				Time: input.StartTime.Time.Add(time.Duration(input.Duration) * time.Minute),
+			},
 			Duration:    input.Duration,
 			TotalPrice:  totalPrice,
 			BookingType: input.BookingType,
@@ -89,7 +93,14 @@ func ActivateBooking(bookingID uint) error {
 	return db.DB.Transaction(func(tx *gorm.DB) error {
 		var booking models.Booking
 		if err := tx.First(&booking, bookingID).Error; err != nil {
-			return errors.New("бронирование не найдено")
+
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("бронирование не найдено")
+
+			} else {
+				fmt.Print(err.Error())
+				return errors.New("ошибка при поиске бронирования")
+			}
 		}
 
 		if booking.Status != models.BookingReserve {
@@ -140,8 +151,8 @@ func CancelBooking(bookingID uint) error {
 			return errors.New("бронирование не найдено")
 		}
 
-		if booking.Status != models.BookingActive {
-			return errors.New("бронирование уже не активно и не может быть отменено")
+		if booking.Status == models.BookingActive || booking.Status == models.BookingClose {
+			return errors.New("бронирование не может быть отменено")
 		}
 
 		// Меняем статус на Cancelled
@@ -162,27 +173,27 @@ func CancelBooking(bookingID uint) error {
 
 // Получить бронирования на текущий день
 func GetBookingsByDate(kartodromID uint, targetDate time.Time) (*[]models.Booking, error) {
-	// Получаем ID всех треков в картодроме
+
 	var trackIDs []uint
 	if err := db.DB.Model(&models.Track{}).
 		Where("kartodrom_id = ?", kartodromID).
 		Pluck("id", &trackIDs).Error; err != nil {
-		return nil, errors.New("ошибка при получении треков картодрома")
+		return nil, fmt.Errorf("ошибка при получении треков картодрома: %w", err)
 	}
 
 	if len(trackIDs) == 0 {
-		return &[]models.Booking{}, nil
+		return nil, errors.New("нет треков")
 	}
 
-	// Только дата
-	dateOnly := time.Date(targetDate.Year(), targetDate.Month(), targetDate.Day(), 0, 0, 0, 0, targetDate.Location())
+	// Форматирование даты в YYYY-MM-DD
+	dateStr := targetDate.Format("2006-01-02")
 
-	// Получаем бронирования на дату с нужными статусами
 	var bookings []models.Booking
 	if err := db.DB.
-		Where("date = ? AND status IN ? AND track_id IN ?", dateOnly, []models.BookingStatus{models.BookingActive, models.BookingReserve}, trackIDs).
+		Where("DATE(date) = ? AND status IN ? AND track_id IN ?", dateStr,
+			[]models.BookingStatus{models.BookingActive, models.BookingReserve}, trackIDs).
 		Find(&bookings).Error; err != nil {
-		return nil, errors.New("ошибка при получении бронирований")
+		return nil, fmt.Errorf("ошибка при получении бронирований: %w", err)
 	}
 
 	return &bookings, nil

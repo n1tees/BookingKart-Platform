@@ -13,9 +13,14 @@ import (
 func GetAvailableKartsForBooking(kartodromID uint, start time.Time, end time.Time) (*[]models.Kart, error) {
 	// 1. Сначала находим все карты в нужном картодроме, которые не сломаны и не в стоп-листе
 	var allKarts []models.Kart
-	if err := db.DB.Where("kartodrom_id = ? AND kart_status = ?", kartodromID, models.Available).
+	if err := db.DB.Where("kartodrom_id = ? AND status = ?", kartodromID, models.Available).
 		Find(&allKarts).Error; err != nil {
-		return nil, errors.New("ошибка при получении списка картов")
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("карт не найден")
+
+		} else {
+			return nil, errors.New("ошибка при поиске карта")
+		}
 	}
 
 	if len(allKarts) == 0 {

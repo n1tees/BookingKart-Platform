@@ -31,7 +31,7 @@ func GetAvailableTracks(kartodromID uint) (*[]AvailableTrack, error) {
 
 	var result []AvailableTrack
 	for _, track := range allTracks {
-		count, err := CountRidersOnTrack(track.ID)
+		count, err := сountRidersOnTrack(track.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -52,25 +52,6 @@ func GetAvailableTracks(kartodromID uint) (*[]AvailableTrack, error) {
 	return &result, nil
 }
 
-// Посчитать количество райдеров на треке
-func CountRidersOnTrack(trackID uint) (uint, error) {
-	now := time.Now()
-
-	var totalRiders uint
-
-	err := db.DB.Model(&models.Booking{}).
-		Select("COALESCE(SUM(rider_count), 0)").
-		Where("track_id = ? AND status = ? AND start_time <= ? AND end_time >= ?",
-			trackID, models.BookingActive, now, now).
-		Scan(&totalRiders).Error
-
-	if err != nil {
-		return 0, errors.New("ошибка при подсчёте райдеров на треке")
-	}
-
-	return totalRiders, nil
-}
-
 // Получить трек по id
 func GetTrackByID(trackID uint) (*models.Track, error) {
 
@@ -87,4 +68,23 @@ func GetTrackByID(trackID uint) (*models.Track, error) {
 	}
 
 	return &track, nil
+}
+
+// посчитать количество райдеров на треке
+func сountRidersOnTrack(trackID uint) (uint, error) {
+	now := time.Now()
+
+	var totalRiders uint
+
+	err := db.DB.Model(&models.Booking{}).
+		Select("COALESCE(SUM(rider_count), 0)").
+		Where("track_id = ? AND status = ? AND start_time <= ? AND end_time >= ?",
+			trackID, models.BookingActive, now, now).
+		Scan(&totalRiders).Error
+
+	if err != nil {
+		return 0, errors.New("ошибка при подсчёте райдеров на треке")
+	}
+
+	return totalRiders, nil
 }

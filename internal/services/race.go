@@ -47,7 +47,7 @@ func CreateRace(input RaceInput) (uint, error) {
 		newRace = models.Race{
 			TrackID:    input.TrackID,
 			Date:       input.ParsedDate,
-			TimeStart:  input.ParsedTimeStart,
+			TimeStart:  models.LocalTime{Time: input.ParsedTimeStart},
 			Laps:       input.Laps,
 			Duration:   input.Duration,
 			TotalPrice: track.PricePerMin * float64(input.Duration),
