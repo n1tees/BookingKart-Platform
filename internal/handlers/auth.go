@@ -9,6 +9,15 @@ import (
 	"github.com/n1tees/BookingKart-Platform/internal/services"
 )
 
+// RegisterHandler godoc
+// @Summary Регистрация пользователя
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param input body services.RegisterInput true "Данные пользователя"
+// @Success 201 {object} map[string]uint
+// @Failure 400 {object} map[string]string
+// @Router /register [post]
 func RegisterHandler(c *gin.Context) {
 	var input services.RegisterInput
 
@@ -36,6 +45,15 @@ func RegisterHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"user_id": userID})
 }
 
+// LoginHandler godoc
+// @Summary Логин пользователя
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param input body services.LoginInput true "Данные пользователя"
+// @Success 200 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /login [post]
 func LoginHandler(c *gin.Context) {
 	var input services.LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {

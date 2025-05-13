@@ -20,6 +20,15 @@ type BookingRequest struct {
 	RiderCount  uint               `json:"rider_count"`
 }
 
+// CreateBookingHandler godoc
+// @Summary Создать бронирование
+// @Tags booking
+// @Accept json
+// @Produce json
+// @Param input body handlers.BookingRequest true "Данные бронирования"
+// @Success 201 {object} map[string]uint
+// @Failure 400 {object} map[string]string
+// @Router /bookings [post]
 func CreateBookingHandler(c *gin.Context) {
 	var req BookingRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -56,6 +65,13 @@ func CreateBookingHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"booking_id": bookingID})
 }
 
+// ActivateBookingHandler godoc
+// @Summary Активировать бронирование
+// @Tags booking
+// @Param id path int true "ID бронирования"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /bookings/{id}/activate [post]
 func ActivateBookingHandler(c *gin.Context) {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err := services.ActivateBooking(uint(id)); err != nil {
@@ -65,6 +81,13 @@ func ActivateBookingHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "бронирование активировано"})
 }
 
+// CloseBookingHandler godoc
+// @Summary Завершить бронирование
+// @Tags booking
+// @Param id path int true "ID бронирования"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /bookings/{id}/close [post]
 func CloseBookingHandler(c *gin.Context) {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err := services.CloseBooking(uint(id)); err != nil {
@@ -74,6 +97,13 @@ func CloseBookingHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "бронирование завершено"})
 }
 
+// CancelBookingHandler godoc
+// @Summary Отменить бронирование
+// @Tags booking
+// @Param id path int true "ID бронирования"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /bookings/{id}/cancel [post]
 func CancelBookingHandler(c *gin.Context) {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err := services.CancelBooking(uint(id)); err != nil {
@@ -82,6 +112,16 @@ func CancelBookingHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "бронирование отменено"})
 }
+
+// GetBookingsByDateHandler godoc
+// @Summary Получить список бронирований по дате
+// @Tags booking
+// @Param id path int true "ID картодрома"
+// @Param date query string true "Дата (YYYY-MM-DD)"
+// @Success 200 {array} models.Booking
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /kartodrom/{id}/bookings [get]
 
 func GetBookingsByDateHandler(c *gin.Context) {
 	kartodromID, _ := strconv.ParseUint(c.Param("id"), 10, 64)

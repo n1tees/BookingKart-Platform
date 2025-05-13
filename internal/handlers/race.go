@@ -9,8 +9,6 @@ import (
 	"github.com/n1tees/BookingKart-Platform/internal/services"
 )
 
-// =================== RACE =======================
-
 type CreateRaceRequest struct {
 	TrackID   uint            `json:"track_id"`
 	Date      string          `json:"date"`
@@ -20,6 +18,13 @@ type CreateRaceRequest struct {
 	Duration  uint            `json:"duration"`
 }
 
+// CreateRaceHandler godoc
+// @Summary Создать гонку
+// @Tags race
+// @Param input body handlers.CreateRaceRequest true "Данные гонки"
+// @Success 201 {object} map[string]uint
+// @Failure 400 {object} map[string]string
+// @Router /races [post]
 func CreateRaceHandler(c *gin.Context) {
 	var req CreateRaceRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -57,6 +62,13 @@ func CreateRaceHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"race_id": raceID})
 }
 
+// StartRaceHandler godoc
+// @Summary Стартовать гонку
+// @Tags race
+// @Param id path int true "ID гонки"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /races/{id}/start [post]
 func StartRaceHandler(c *gin.Context) {
 	raceID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err := services.StartRace(uint(raceID)); err != nil {
@@ -66,6 +78,13 @@ func StartRaceHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "гонка стартовала"})
 }
 
+// FinishRaceHandler godoc
+// @Summary Завершить гонку
+// @Tags race
+// @Param id path int true "ID гонки"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /races/{id}/finish [post]
 func FinishRaceHandler(c *gin.Context) {
 	raceID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err := services.FinishRace(uint(raceID)); err != nil {
@@ -75,6 +94,13 @@ func FinishRaceHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "гонка завершена"})
 }
 
+// CancelRaceHandler godoc
+// @Summary Отменить гонку
+// @Tags race
+// @Param id path int true "ID гонки"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /races/{id}/cancel [post]
 func CancelRaceHandler(c *gin.Context) {
 	raceID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err := services.CancelRace(uint(raceID)); err != nil {
@@ -91,6 +117,14 @@ type RegisterRiderRequest struct {
 	ResultTypeID uint `json:"result_type_id"`
 }
 
+// RegisterRiderHandler godoc
+// @Summary Зарегистрировать участника в гонке
+// @Tags race
+// @Param id path int true "ID гонки"
+// @Param input body handlers.RegisterRiderRequest true "Данные участника"
+// @Success 201 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /races/{id}/riders [post]
 func RegisterRiderHandler(c *gin.Context) {
 	raceID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	var req RegisterRiderRequest
@@ -106,6 +140,14 @@ func RegisterRiderHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "участник добавлен в гонку"})
 }
 
+// RemoveRiderHandler godoc
+// @Summary Удалить участника из гонки
+// @Tags race
+// @Param id path int true "ID гонки"
+// @Param riderId path int true "ID участника"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /races/{id}/riders/{riderId} [delete]
 func RemoveRiderHandler(c *gin.Context) {
 	raceID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	riderID, _ := strconv.ParseUint(c.Param("riderId"), 10, 64)
@@ -122,6 +164,14 @@ type AddResultRequest struct {
 	PersonalResult uint `json:"personal_result"`
 }
 
+// AddRaceResultHandler godoc
+// @Summary Добавить результат участника
+// @Tags race
+// @Param id path int true "ID гонки"
+// @Param input body handlers.AddResultRequest true "Данные результата"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /races/{id}/results [post]
 func AddRaceResultHandler(c *gin.Context) {
 	raceID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	var req AddResultRequest

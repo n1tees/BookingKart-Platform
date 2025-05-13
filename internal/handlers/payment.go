@@ -8,6 +8,13 @@ import (
 	"github.com/n1tees/BookingKart-Platform/internal/services"
 )
 
+// GetPaymentsHandler godoc
+// @Summary Получить историю платежей пользователя
+// @Tags payment
+// @Param id path int true "ID пользователя"
+// @Success 200 {array} models.Payment
+// @Failure 500 {object} map[string]string
+// @Router /user/{id}/payments [get]
 func GetPaymentsHandler(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	payments, err := services.GetMyPayments(uint(userID))
@@ -18,6 +25,13 @@ func GetPaymentsHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, payments)
 }
 
+// GetBalanceHandler godoc
+// @Summary Получить текущий баланс пользователя
+// @Tags payment
+// @Param id path int true "ID пользователя"
+// @Success 200 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /user/{id}/balance [get]
 func GetBalanceHandler(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	balance, err := services.GetBalance(uint(userID))
@@ -32,6 +46,14 @@ type AmountRequest struct {
 	Amount float64 `json:"amount"`
 }
 
+// RefillBalanceHandler godoc
+// @Summary Пополнить баланс пользователя
+// @Tags payment
+// @Param id path int true "ID пользователя"
+// @Param amount body handlers.AmountRequest true "Сумма пополнения"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /user/{id}/refill [post]
 func RefillBalanceHandler(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	var req AmountRequest
@@ -47,6 +69,14 @@ func RefillBalanceHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "баланс успешно пополнен"})
 }
 
+// RefundBalanceHandler godoc
+// @Summary Сделать возврат средств пользователю
+// @Tags payment
+// @Param id path int true "ID пользователя"
+// @Param amount body handlers.AmountRequest true "Сумма возврата"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /user/{id}/refund [post]
 func RefundBalanceHandler(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	var req AmountRequest

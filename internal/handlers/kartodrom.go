@@ -7,6 +7,13 @@ import (
 	"github.com/n1tees/BookingKart-Platform/internal/services"
 )
 
+// GetKartodromsHandler godoc
+// @Summary Получить список картодромов
+// @Tags kartodrom
+// @Param city query string false "Город для фильтрации"
+// @Success 200 {array} models.Kartodrom
+// @Failure 500 {object} map[string]string
+// @Router /kartodroms [get]
 func GetKartodromsHandler(c *gin.Context) {
 	city := c.Query("city")
 	var cityPtr *string
