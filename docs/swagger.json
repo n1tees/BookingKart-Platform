@@ -1,0 +1,1780 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/bookings": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "booking"
+                ],
+                "summary": "Создать бронирование",
+                "parameters": [
+                    {
+                        "description": "Данные бронирования",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.BookingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/{id}/activate": {
+            "post": {
+                "tags": [
+                    "booking"
+                ],
+                "summary": "Активировать бронирование",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID бронирования",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "booking"
+                ],
+                "summary": "Отменить бронирование",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID бронирования",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/{id}/close": {
+            "post": {
+                "tags": [
+                    "booking"
+                ],
+                "summary": "Завершить бронирование",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID бронирования",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartbookings": {
+            "post": {
+                "tags": [
+                    "kartbooking"
+                ],
+                "summary": "Зарезервировать карт для бронирования",
+                "parameters": [
+                    {
+                        "description": "Данные бронирования карта",
+                        "name": "booking",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.KartBookingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartbookings/{bookingId}/{kartId}/activate": {
+            "post": {
+                "tags": [
+                    "kartbooking"
+                ],
+                "summary": "Активировать бронирование карта",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID бронирования",
+                        "name": "bookingId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "kartId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartbookings/{bookingId}/{kartId}/cancel": {
+            "post": {
+                "tags": [
+                    "kartbooking"
+                ],
+                "summary": "Отменить бронирование карта",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID бронирования",
+                        "name": "bookingId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "kartId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartbookings/{bookingId}/{kartId}/finish": {
+            "post": {
+                "tags": [
+                    "kartbooking"
+                ],
+                "summary": "Завершить бронирование карта",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID бронирования",
+                        "name": "bookingId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "kartId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartodrom/{id}/free-karts": {
+            "get": {
+                "tags": [
+                    "kart"
+                ],
+                "summary": "Получить доступные карты в картодроме",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID картодрома",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Kart"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartodrom/{id}/karts": {
+            "get": {
+                "tags": [
+                    "kartbooking"
+                ],
+                "summary": "Получить доступные карты для бронирования",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID картодрома",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Дата начала (2025-05-15T10:00:00)",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Дата окончания (2025-05-15T11:00:00)",
+                        "name": "end",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Kart"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartodrom/{id}/tracks": {
+            "get": {
+                "tags": [
+                    "track"
+                ],
+                "summary": "Получить доступные треки картодрома",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID картодрома",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Track"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kartodroms": {
+            "get": {
+                "tags": [
+                    "kartodrom"
+                ],
+                "summary": "Получить список картодромов",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Город для фильтрации",
+                        "name": "city",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Kartodrom"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/karts/{id}/book": {
+            "post": {
+                "tags": [
+                    "kart"
+                ],
+                "summary": "Забронировать карт",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/karts/{id}/broken": {
+            "post": {
+                "tags": [
+                    "kart"
+                ],
+                "summary": "Пометить карт как сломанный",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/karts/{id}/free": {
+            "post": {
+                "tags": [
+                    "kart"
+                ],
+                "summary": "Освободить карт",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/karts/{id}/repair": {
+            "post": {
+                "tags": [
+                    "kart"
+                ],
+                "summary": "Восстановить карт",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/karts/{id}/stoplist": {
+            "post": {
+                "tags": [
+                    "kart"
+                ],
+                "summary": "Добавить карт в стоп-лист",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID карта",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Логин пользователя",
+                "parameters": [
+                    {
+                        "description": "Данные пользователя",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.LoginInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/races": {
+            "post": {
+                "tags": [
+                    "race"
+                ],
+                "summary": "Создать гонку",
+                "parameters": [
+                    {
+                        "description": "Данные гонки",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateRaceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/races/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "race"
+                ],
+                "summary": "Отменить гонку",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID гонки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/races/{id}/finish": {
+            "post": {
+                "tags": [
+                    "race"
+                ],
+                "summary": "Завершить гонку",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID гонки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/races/{id}/results": {
+            "post": {
+                "tags": [
+                    "race"
+                ],
+                "summary": "Добавить результат участника",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID гонки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные результата",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AddResultRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/races/{id}/riders": {
+            "post": {
+                "tags": [
+                    "race"
+                ],
+                "summary": "Зарегистрировать участника в гонке",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID гонки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные участника",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RegisterRiderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/races/{id}/riders/{riderId}": {
+            "delete": {
+                "tags": [
+                    "race"
+                ],
+                "summary": "Удалить участника из гонки",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID гонки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID участника",
+                        "name": "riderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/races/{id}/start": {
+            "post": {
+                "tags": [
+                    "race"
+                ],
+                "summary": "Стартовать гонку",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID гонки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Регистрация пользователя",
+                "parameters": [
+                    {
+                        "description": "Данные пользователя",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.RegisterInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test": {
+            "get": {
+                "tags": [
+                    "test"
+                ],
+                "summary": "Проверочный endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/track/{id}": {
+            "get": {
+                "tags": [
+                    "track"
+                ],
+                "summary": "Получить трек по ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID трека",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Track"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Получить профиль пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Обновить профиль пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Обновляемые данные",
+                        "name": "updates",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}/balance": {
+            "get": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Получить текущий баланс пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}/change-password": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Сменить пароль пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные для смены пароля",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ChangePasswordInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}/payments": {
+            "get": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Получить историю платежей пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}/refill": {
+            "post": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Пополнить баланс пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Сумма пополнения",
+                        "name": "amount",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AmountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}/refund": {
+            "post": {
+                "tags": [
+                    "payment"
+                ],
+                "summary": "Сделать возврат средств пользователю",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Сумма возврата",
+                        "name": "amount",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.AmountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.AddResultRequest": {
+            "type": "object",
+            "properties": {
+                "personal_result": {
+                    "type": "integer"
+                },
+                "result_type_id": {
+                    "type": "integer"
+                },
+                "rider_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handlers.AmountRequest": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                }
+            }
+        },
+        "handlers.BookingRequest": {
+            "type": "object",
+            "properties": {
+                "booking_type": {
+                    "$ref": "#/definitions/models.BookingType"
+                },
+                "customer_id": {
+                    "type": "integer"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "rider_count": {
+                    "type": "integer"
+                },
+                "start_time": {
+                    "type": "string"
+                },
+                "track_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handlers.CreateRaceRequest": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "laps": {
+                    "type": "integer"
+                },
+                "race_type": {
+                    "$ref": "#/definitions/models.RaceType"
+                },
+                "time_start": {
+                    "type": "string"
+                },
+                "track_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handlers.KartBookingRequest": {
+            "type": "object",
+            "properties": {
+                "booking_id": {
+                    "type": "integer"
+                },
+                "kart_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handlers.RegisterRiderRequest": {
+            "type": "object",
+            "properties": {
+                "result_type_id": {
+                    "type": "integer"
+                },
+                "rider_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handlers.UpdateUserRequest": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "models.BookingType": {
+            "type": "string",
+            "enum": [
+                "Обычное бронирование",
+                "Бронирование всего трека",
+                "Бронирование всего картодрома"
+            ],
+            "x-enum-varnames": [
+                "CommonBooking",
+                "OneTrackBooking",
+                "AllTrackBooking"
+            ]
+        },
+        "models.DifLevel": {
+            "type": "string",
+            "enum": [
+                "Детский",
+                "Легкий",
+                "Средний",
+                "Сложный"
+            ],
+            "x-enum-varnames": [
+                "Kids",
+                "Light",
+                "Medium",
+                "Hard"
+            ]
+        },
+        "models.Kart": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "kartModel": {
+                    "$ref": "#/definitions/models.KartModel"
+                },
+                "kartModelID": {
+                    "type": "integer"
+                },
+                "kartodrom": {
+                    "$ref": "#/definitions/models.Kartodrom"
+                },
+                "kartodromID": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.KartStatus"
+                }
+            }
+        },
+        "models.KartModel": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "$ref": "#/definitions/models.KartModelStatus"
+                },
+                "desc": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "maxHeight": {
+                    "type": "integer"
+                },
+                "maxSpeed": {
+                    "type": "integer"
+                },
+                "maxWeight": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pricePerMin": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.KartModelStatus": {
+            "type": "string",
+            "enum": [
+                "детский",
+                "обычный",
+                "спортивный",
+                "гоночный",
+                "электрический"
+            ],
+            "x-enum-varnames": [
+                "KidKart",
+                "CommonKart",
+                "SportKart",
+                "RaceKart",
+                "ElectoKart"
+            ]
+        },
+        "models.KartStatus": {
+            "type": "string",
+            "enum": [
+                "Доступен",
+                "В использовании",
+                "Сломан",
+                "Недоступен"
+            ],
+            "x-enum-varnames": [
+                "Available",
+                "InUse",
+                "Broken",
+                "InStopList"
+            ]
+        },
+        "models.Kartodrom": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "schedules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.KartodromSchedule"
+                    }
+                }
+            }
+        },
+        "models.KartodromSchedule": {
+            "type": "object",
+            "properties": {
+                "closeTime": {
+                    "type": "string"
+                },
+                "dayOfWeek": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kartodrom": {
+                    "$ref": "#/definitions/models.Kartodrom"
+                },
+                "kartodromID": {
+                    "type": "integer"
+                },
+                "openTime": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RaceType": {
+            "type": "string",
+            "enum": [
+                "Свободный заезд",
+                "Одиночный заезд на время",
+                "Парный заезд",
+                "Заезд на короткую дистанцию",
+                "Заезд на длинную дистанцию"
+            ],
+            "x-enum-varnames": [
+                "FreeRide",
+                "TimeAttack",
+                "Duo",
+                "SprintRace",
+                "EnduranceRace"
+            ]
+        },
+        "models.Track": {
+            "type": "object",
+            "properties": {
+                "difLevel": {
+                    "$ref": "#/definitions/models.DifLevel"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kartodrom": {
+                    "$ref": "#/definitions/models.Kartodrom"
+                },
+                "kartodromID": {
+                    "type": "integer"
+                },
+                "length": {
+                    "type": "integer"
+                },
+                "maxKarts": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pricePerMin": {
+                    "type": "number"
+                }
+            }
+        },
+        "services.ChangePasswordInput": {
+            "type": "object",
+            "required": [
+                "new_password",
+                "old_password",
+                "repeat_new_password"
+            ],
+            "properties": {
+                "new_password": {
+                    "type": "string"
+                },
+                "old_password": {
+                    "type": "string"
+                },
+                "repeat_new_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.LoginInput": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.RegisterInput": {
+            "type": "object",
+            "properties": {
+                "birthday": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "fname": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

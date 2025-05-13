@@ -5,10 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/n1tees/BookingKart-Platform/config"
-	"github.com/n1tees/BookingKart-Platform/internal/db"
-	"github.com/n1tees/BookingKart-Platform/internal/middleware"
-	"github.com/n1tees/BookingKart-Platform/internal/routes"
-	"github.com/n1tees/BookingKart-Platform/internal/services"
+	"github.com/n1tees/BookingKart-Platform/pkg/db"
+	"github.com/n1tees/BookingKart-Platform/pkg/middleware"
+	"github.com/n1tees/BookingKart-Platform/pkg/routes"
+	"github.com/n1tees/BookingKart-Platform/pkg/services"
 
 	_ "github.com/n1tees/BookingKart-Platform/cmd/docs"
 	swaggerFiles "github.com/swaggo/files"

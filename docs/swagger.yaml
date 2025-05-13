@@ -1,0 +1,1169 @@
+definitions:
+  handlers.AddResultRequest:
+    properties:
+      personal_result:
+        type: integer
+      result_type_id:
+        type: integer
+      rider_id:
+        type: integer
+    type: object
+  handlers.AmountRequest:
+    properties:
+      amount:
+        type: number
+    type: object
+  handlers.BookingRequest:
+    properties:
+      booking_type:
+        $ref: '#/definitions/models.BookingType'
+      customer_id:
+        type: integer
+      date:
+        type: string
+      duration:
+        type: integer
+      rider_count:
+        type: integer
+      start_time:
+        type: string
+      track_id:
+        type: integer
+    type: object
+  handlers.CreateRaceRequest:
+    properties:
+      date:
+        type: string
+      duration:
+        type: integer
+      laps:
+        type: integer
+      race_type:
+        $ref: '#/definitions/models.RaceType'
+      time_start:
+        type: string
+      track_id:
+        type: integer
+    type: object
+  handlers.KartBookingRequest:
+    properties:
+      booking_id:
+        type: integer
+      kart_id:
+        type: integer
+    type: object
+  handlers.RegisterRiderRequest:
+    properties:
+      result_type_id:
+        type: integer
+      rider_id:
+        type: integer
+    type: object
+  handlers.UpdateUserRequest:
+    additionalProperties: true
+    type: object
+  models.BookingType:
+    enum:
+    - Обычное бронирование
+    - Бронирование всего трека
+    - Бронирование всего картодрома
+    type: string
+    x-enum-varnames:
+    - CommonBooking
+    - OneTrackBooking
+    - AllTrackBooking
+  models.DifLevel:
+    enum:
+    - Детский
+    - Легкий
+    - Средний
+    - Сложный
+    type: string
+    x-enum-varnames:
+    - Kids
+    - Light
+    - Medium
+    - Hard
+  models.Kart:
+    properties:
+      id:
+        type: integer
+      kartModel:
+        $ref: '#/definitions/models.KartModel'
+      kartModelID:
+        type: integer
+      kartodrom:
+        $ref: '#/definitions/models.Kartodrom'
+      kartodromID:
+        type: integer
+      status:
+        $ref: '#/definitions/models.KartStatus'
+    type: object
+  models.KartModel:
+    properties:
+      category:
+        $ref: '#/definitions/models.KartModelStatus'
+      desc:
+        type: string
+      id:
+        type: integer
+      maxHeight:
+        type: integer
+      maxSpeed:
+        type: integer
+      maxWeight:
+        type: integer
+      name:
+        type: string
+      pricePerMin:
+        type: number
+    type: object
+  models.KartModelStatus:
+    enum:
+    - детский
+    - обычный
+    - спортивный
+    - гоночный
+    - электрический
+    type: string
+    x-enum-varnames:
+    - KidKart
+    - CommonKart
+    - SportKart
+    - RaceKart
+    - ElectoKart
+  models.KartStatus:
+    enum:
+    - Доступен
+    - В использовании
+    - Сломан
+    - Недоступен
+    type: string
+    x-enum-varnames:
+    - Available
+    - InUse
+    - Broken
+    - InStopList
+  models.Kartodrom:
+    properties:
+      city:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      latitude:
+        type: number
+      location:
+        type: string
+      longitude:
+        type: number
+      name:
+        type: string
+      phone:
+        type: string
+      schedules:
+        items:
+          $ref: '#/definitions/models.KartodromSchedule'
+        type: array
+    type: object
+  models.KartodromSchedule:
+    properties:
+      closeTime:
+        type: string
+      dayOfWeek:
+        type: integer
+      id:
+        type: integer
+      kartodrom:
+        $ref: '#/definitions/models.Kartodrom'
+      kartodromID:
+        type: integer
+      openTime:
+        type: string
+    type: object
+  models.RaceType:
+    enum:
+    - Свободный заезд
+    - Одиночный заезд на время
+    - Парный заезд
+    - Заезд на короткую дистанцию
+    - Заезд на длинную дистанцию
+    type: string
+    x-enum-varnames:
+    - FreeRide
+    - TimeAttack
+    - Duo
+    - SprintRace
+    - EnduranceRace
+  models.Track:
+    properties:
+      difLevel:
+        $ref: '#/definitions/models.DifLevel'
+      id:
+        type: integer
+      kartodrom:
+        $ref: '#/definitions/models.Kartodrom'
+      kartodromID:
+        type: integer
+      length:
+        type: integer
+      maxKarts:
+        type: integer
+      name:
+        type: string
+      pricePerMin:
+        type: number
+    type: object
+  services.ChangePasswordInput:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+      repeat_new_password:
+        type: string
+    required:
+    - new_password
+    - old_password
+    - repeat_new_password
+    type: object
+  services.LoginInput:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  services.RegisterInput:
+    properties:
+      birthday:
+        type: string
+      email:
+        type: string
+      fname:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /bookings:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные бронирования
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.BookingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать бронирование
+      tags:
+      - booking
+  /bookings/{id}/activate:
+    post:
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Активировать бронирование
+      tags:
+      - booking
+  /bookings/{id}/cancel:
+    post:
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Отменить бронирование
+      tags:
+      - booking
+  /bookings/{id}/close:
+    post:
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Завершить бронирование
+      tags:
+      - booking
+  /kartbookings:
+    post:
+      parameters:
+      - description: Данные бронирования карта
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.KartBookingRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Зарезервировать карт для бронирования
+      tags:
+      - kartbooking
+  /kartbookings/{bookingId}/{kartId}/activate:
+    post:
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: bookingId
+        required: true
+        type: integer
+      - description: ID карта
+        in: path
+        name: kartId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Активировать бронирование карта
+      tags:
+      - kartbooking
+  /kartbookings/{bookingId}/{kartId}/cancel:
+    post:
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: bookingId
+        required: true
+        type: integer
+      - description: ID карта
+        in: path
+        name: kartId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Отменить бронирование карта
+      tags:
+      - kartbooking
+  /kartbookings/{bookingId}/{kartId}/finish:
+    post:
+      parameters:
+      - description: ID бронирования
+        in: path
+        name: bookingId
+        required: true
+        type: integer
+      - description: ID карта
+        in: path
+        name: kartId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Завершить бронирование карта
+      tags:
+      - kartbooking
+  /kartodrom/{id}/free-karts:
+    get:
+      parameters:
+      - description: ID картодрома
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Kart'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить доступные карты в картодроме
+      tags:
+      - kart
+  /kartodrom/{id}/karts:
+    get:
+      parameters:
+      - description: ID картодрома
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Дата начала (2025-05-15T10:00:00)
+        in: query
+        name: start
+        required: true
+        type: string
+      - description: Дата окончания (2025-05-15T11:00:00)
+        in: query
+        name: end
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Kart'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить доступные карты для бронирования
+      tags:
+      - kartbooking
+  /kartodrom/{id}/tracks:
+    get:
+      parameters:
+      - description: ID картодрома
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Track'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить доступные треки картодрома
+      tags:
+      - track
+  /kartodroms:
+    get:
+      parameters:
+      - description: Город для фильтрации
+        in: query
+        name: city
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Kartodrom'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить список картодромов
+      tags:
+      - kartodrom
+  /karts/{id}/book:
+    post:
+      parameters:
+      - description: ID карта
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Забронировать карт
+      tags:
+      - kart
+  /karts/{id}/broken:
+    post:
+      parameters:
+      - description: ID карта
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Пометить карт как сломанный
+      tags:
+      - kart
+  /karts/{id}/free:
+    post:
+      parameters:
+      - description: ID карта
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Освободить карт
+      tags:
+      - kart
+  /karts/{id}/repair:
+    post:
+      parameters:
+      - description: ID карта
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Восстановить карт
+      tags:
+      - kart
+  /karts/{id}/stoplist:
+    post:
+      parameters:
+      - description: ID карта
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Добавить карт в стоп-лист
+      tags:
+      - kart
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Логин пользователя
+      tags:
+      - auth
+  /races:
+    post:
+      parameters:
+      - description: Данные гонки
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateRaceRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать гонку
+      tags:
+      - race
+  /races/{id}/cancel:
+    post:
+      parameters:
+      - description: ID гонки
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Отменить гонку
+      tags:
+      - race
+  /races/{id}/finish:
+    post:
+      parameters:
+      - description: ID гонки
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Завершить гонку
+      tags:
+      - race
+  /races/{id}/results:
+    post:
+      parameters:
+      - description: ID гонки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные результата
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AddResultRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Добавить результат участника
+      tags:
+      - race
+  /races/{id}/riders:
+    post:
+      parameters:
+      - description: ID гонки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные участника
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RegisterRiderRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Зарегистрировать участника в гонке
+      tags:
+      - race
+  /races/{id}/riders/{riderId}:
+    delete:
+      parameters:
+      - description: ID гонки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ID участника
+        in: path
+        name: riderId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Удалить участника из гонки
+      tags:
+      - race
+  /races/{id}/start:
+    post:
+      parameters:
+      - description: ID гонки
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Стартовать гонку
+      tags:
+      - race
+  /register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Регистрация пользователя
+      tags:
+      - auth
+  /test:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Проверочный endpoint
+      tags:
+      - test
+  /track/{id}:
+    get:
+      parameters:
+      - description: ID трека
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Track'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить трек по ID
+      tags:
+      - track
+  /user/{id}:
+    get:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить профиль пользователя
+      tags:
+      - user
+    patch:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновляемые данные
+        in: body
+        name: updates
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateUserRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить профиль пользователя
+      tags:
+      - user
+  /user/{id}/balance:
+    get:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить текущий баланс пользователя
+      tags:
+      - payment
+  /user/{id}/change-password:
+    post:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные для смены пароля
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.ChangePasswordInput'
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Сменить пароль пользователя
+      tags:
+      - user
+  /user/{id}/payments:
+    get:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить историю платежей пользователя
+      tags:
+      - payment
+  /user/{id}/refill:
+    post:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Сумма пополнения
+        in: body
+        name: amount
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AmountRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Пополнить баланс пользователя
+      tags:
+      - payment
+  /user/{id}/refund:
+    post:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Сумма возврата
+        in: body
+        name: amount
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AmountRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Сделать возврат средств пользователю
+      tags:
+      - payment
+swagger: "2.0"
