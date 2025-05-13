@@ -10,7 +10,7 @@ import (
 	"github.com/n1tees/BookingKart-Platform/pkg/routes"
 	"github.com/n1tees/BookingKart-Platform/pkg/services"
 
-	_ "github.com/n1tees/BookingKart-Platform/cmd/docs"
+	_ "github.com/n1tees/BookingKart-Platform/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
