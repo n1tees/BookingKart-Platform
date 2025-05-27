@@ -1,0 +1,934 @@
+{
+  "info": {
+    "name": "BookingKart API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST /bookings",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/bookings",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "bookings"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /bookings/{id}/activate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/bookings/{id}/activate",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "bookings",
+            "{id}",
+            "activate"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /bookings/{id}/cancel",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/bookings/{id}/cancel",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "bookings",
+            "{id}",
+            "cancel"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /bookings/{id}/close",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/bookings/{id}/close",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "bookings",
+            "{id}",
+            "close"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /kartbookings",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartbookings",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartbookings"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /kartbookings/{bookingId}/{kartId}/activate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartbookings/{bookingId}/{kartId}/activate",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartbookings",
+            "{bookingId}",
+            "{kartId}",
+            "activate"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /kartbookings/{bookingId}/{kartId}/cancel",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartbookings/{bookingId}/{kartId}/cancel",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartbookings",
+            "{bookingId}",
+            "{kartId}",
+            "cancel"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /kartbookings/{bookingId}/{kartId}/finish",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartbookings/{bookingId}/{kartId}/finish",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartbookings",
+            "{bookingId}",
+            "{kartId}",
+            "finish"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /kartodrom/{id}/free-karts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartodrom/{id}/free-karts",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartodrom",
+            "{id}",
+            "free-karts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /kartodrom/{id}/karts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartodrom/{id}/karts",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartodrom",
+            "{id}",
+            "karts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /kartodrom/{id}/tracks",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartodrom/{id}/tracks",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartodrom",
+            "{id}",
+            "tracks"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /kartodroms",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/kartodroms",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "kartodroms"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /karts/{id}/book",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/karts/{id}/book",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "karts",
+            "{id}",
+            "book"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /karts/{id}/broken",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/karts/{id}/broken",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "karts",
+            "{id}",
+            "broken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /karts/{id}/free",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/karts/{id}/free",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "karts",
+            "{id}",
+            "free"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /karts/{id}/repair",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/karts/{id}/repair",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "karts",
+            "{id}",
+            "repair"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /karts/{id}/stoplist",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/karts/{id}/stoplist",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "karts",
+            "{id}",
+            "stoplist"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/login",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /races",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/races",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "races"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /races/{id}/cancel",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/races/{id}/cancel",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "races",
+            "{id}",
+            "cancel"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /races/{id}/finish",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/races/{id}/finish",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "races",
+            "{id}",
+            "finish"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /races/{id}/results",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/races/{id}/results",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "races",
+            "{id}",
+            "results"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /races/{id}/riders",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/races/{id}/riders",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "races",
+            "{id}",
+            "riders"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE /races/{id}/riders/{riderId}",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/races/{id}/riders/{riderId}",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "races",
+            "{id}",
+            "riders",
+            "{riderId}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /races/{id}/start",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/races/{id}/start",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "races",
+            "{id}",
+            "start"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/register",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "register"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /test",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/test",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "test"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /track/{id}",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/track/{id}",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "track",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /user/{id}",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/user/{id}",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "user",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /user/{id}",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/user/{id}",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "user",
+            "{id}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /user/{id}/balance",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/user/{id}/balance",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "user",
+            "{id}",
+            "balance"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /user/{id}/change-password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/user/{id}/change-password",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "user",
+            "{id}",
+            "change-password"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GET /user/{id}/payments",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/user/{id}/payments",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "user",
+            "{id}",
+            "payments"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /user/{id}/refill",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/user/{id}/refill",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "user",
+            "{id}",
+            "refill"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST /user/{id}/refund",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/user/{id}/refund",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "user",
+            "{id}",
+            "refund"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"example\": \"replace with real data\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
